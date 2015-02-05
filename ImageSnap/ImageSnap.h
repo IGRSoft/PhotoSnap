@@ -8,7 +8,7 @@
 #import <Cocoa/Cocoa.h>
 #import <AVFoundation/AVFoundation.h>
 
-NSString *VERSION = @"0.3.0";
+#define LIB_VERSION  @"0.4.0"
 
 @interface ImageSnap : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate> {
     CVImageBufferRef mCurrentImageBuffer;
@@ -48,6 +48,6 @@ NSString *VERSION = @"0.3.0";
  * Returns current snapshot or nil if there is a problem
  * or session is not started.
  */
-- (NSImage *)snapshot;
+@property (nonatomic, readonly, copy) NSImage *snapshot;
 
 @end
