@@ -8,8 +8,6 @@
 #import <Cocoa/Cocoa.h>
 #import <AVFoundation/AVFoundation.h>
 
-#define LIB_VERSION  @"0.4.0"
-
 @interface ImageSnap : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate> {
     CVImageBufferRef mCurrentImageBuffer;
 }
