@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A54A9CC11A83F4B6004D82DB /* ImageSnap.h in Headers */ = {isa = PBXBuildFile; fileRef = A54A9CC01A83F4B6004D82DB /* ImageSnap.h */; };
+		A54A9CC11A83F4B6004D82DB /* ImageSnap.h in Headers */ = {isa = PBXBuildFile; fileRef = A54A9CC01A83F4B6004D82DB /* ImageSnap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A54A9CC31A83F4B6004D82DB /* ImageSnap.m in Sources */ = {isa = PBXBuildFile; fileRef = A54A9CC21A83F4B6004D82DB /* ImageSnap.m */; };
 		A54A9CC91A83F4B6004D82DB /* libImageSnap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A54A9CBE1A83F4B5004D82DB /* libImageSnap.a */; };
 		A54A9CD61A83F895004D82DB /* Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = A54A9CD51A83F894004D82DB /* Prefix.pch */; };
@@ -17,7 +17,8 @@
 		A54A9CE81A83F8F2004D82DB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A54A9CE71A83F8F2004D82DB /* Images.xcassets */; };
 		A54A9CEB1A83F8F2004D82DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A54A9CE91A83F8F2004D82DB /* Main.storyboard */; };
 		A54A9D001A83FCAF004D82DB /* libImageSnap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A54A9CBE1A83F4B5004D82DB /* libImageSnap.a */; };
-		A54A9D021A840151004D82DB /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51FA5EE7183F6D1300C9F2FA /* AVFoundation.framework */; };
+		A5CB1AF41A840898005AAB21 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5CB1AF31A840898005AAB21 /* CoreMedia.framework */; };
+		A5CB1AF51A84089E005AAB21 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51FA5EE7183F6D1300C9F2FA /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		A54A9CE51A83F8F2004D82DB /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		A54A9CE71A83F8F2004D82DB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A54A9CEA1A83F8F2004D82DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A5CB1AF31A840898005AAB21 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		D48D572810598E4000885DA8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -57,7 +59,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A54A9D021A840151004D82DB /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +74,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5CB1AF51A84089E005AAB21 /* AVFoundation.framework in Frameworks */,
+				A5CB1AF41A840898005AAB21 /* CoreMedia.framework in Frameworks */,
 				A54A9D001A83FCAF004D82DB /* libImageSnap.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +99,7 @@
 		08FB779DFE84155DC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A5CB1AF31A840898005AAB21 /* CoreMedia.framework */,
 				51FA5EE7183F6D1300C9F2FA /* AVFoundation.framework */,
 				09AB6884FE841BABC02AAC07 /* CoreFoundation.framework */,
 				D48D572810598E4000885DA8 /* Cocoa.framework */,
@@ -409,6 +413,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include;
 			};
 			name = Debug;
 		};
@@ -442,6 +447,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include;
 			};
 			name = Release;
 		};
@@ -563,6 +569,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(CONFIGURATION_BUILD_DIR)/include\"",
+				);
 				INFOPLIST_FILE = Example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -601,6 +612,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(CONFIGURATION_BUILD_DIR)/include\"",
+				);
 				INFOPLIST_FILE = Example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;

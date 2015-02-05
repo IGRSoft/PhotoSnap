@@ -268,9 +268,12 @@
     }
     
     
-    if ( interval > 0 ){
+    if ( interval > 0 )
+	{
         return YES;
-    } else {
+    }
+	else
+	{
         return image == nil ? NO : [ImageSnap saveImage:image toPath:path];
     }
 }   // end
