@@ -4,7 +4,9 @@
 //
 //  Created by Robert Harder on 9/10/09.
 //  Updated by Sam Green for Mavericks (OSX 10.9) on 11/22/13
+//  Updated by Vitalii Parovishnyk for Yosemite (OSX 10.10) on 14/01/15
 //
+
 #import <Cocoa/Cocoa.h>
 #import <AVFoundation/AVFoundation.h>
 
