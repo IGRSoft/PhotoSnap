@@ -414,6 +414,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = include;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -448,6 +449,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = include;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
