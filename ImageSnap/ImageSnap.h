@@ -10,7 +10,8 @@
 #import <Cocoa/Cocoa.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface ImageSnap : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate> {
+@interface ImageSnap : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
+{
     CVImageBufferRef mCurrentImageBuffer;
 }
 
@@ -40,9 +41,17 @@
  * Activates the video source, saves a frame, stops the source,
  * and saves the file.
  */
-+ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device toFile:(NSString *)path;
-+ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup;
-+ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup withTimelapse:(NSNumber *)timelapse;
++ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device
+                  toFile:(NSString *)path;
+
++ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device
+                  toFile:(NSString *)path
+              withWarmup:(NSNumber *)warmup;
+
++ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device
+                  toFile:(NSString *)path
+              withWarmup:(NSNumber *)warmup
+           withTimelapse:(NSNumber *)timelapse;
 
 /**
  * Returns current snapshot or nil if there is a problem

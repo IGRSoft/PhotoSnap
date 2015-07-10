@@ -190,12 +190,19 @@
 
 + (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device toFile:(NSString *)path
 {
-    return [self saveSnapshotFrom:device toFile:path withWarmup:nil];
+    return [self saveSnapshotFrom:device
+                           toFile:path
+                       withWarmup:nil];
 }
 
-+ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device toFile:(NSString *)path withWarmup:(NSNumber *)warmup
++ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device
+                  toFile:(NSString *)path
+              withWarmup:(NSNumber *)warmup
 {
-    return [self saveSnapshotFrom:device toFile:path withWarmup:warmup withTimelapse:nil];
+    return [self saveSnapshotFrom:device
+                           toFile:path
+                       withWarmup:warmup
+                    withTimelapse:nil];
 }
 
 + (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device
@@ -221,7 +228,7 @@
         else
         {
             double delay = [warmup doubleValue];
-            DBNSLog(@"Delaying %.2lf seconds for warmup...",delay);
+            DBNSLog(@"Delaying %.2lf seconds for warmup...", delay);
             NSDate *now = [[NSDate alloc] init];
             [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval:delay]];
             DBNSLog(@"Warmup complete.");
