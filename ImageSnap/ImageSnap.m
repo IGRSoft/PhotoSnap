@@ -212,15 +212,16 @@
 {
     ImageSnap *snap;
     NSImage *image = nil;
-    double interval = timelapse == nil ? -1 : [timelapse doubleValue];
+    double interval = timelapse.doubleValue <= 0 ? -1 : [timelapse doubleValue];
     
     snap = [[ImageSnap alloc] init];            // Instance of this ImageSnap class
     DBNSLog(@"Starting device...");
+    
     if ([snap startSession:device] ) // Try starting session
     {
         DBNSLog(@"Device started.");
         
-        if (warmup == nil )
+        if (warmup.integerValue <= 0 )
         {
             // Skip warmup
             DBNSLog(@"Skipping warmup period.");
@@ -229,7 +230,7 @@
         {
             double delay = [warmup doubleValue];
             DBNSLog(@"Delaying %.2lf seconds for warmup...", delay);
-            NSDate *now = [[NSDate alloc] init];
+            NSDate *now = [NSDate date];
             [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval:delay]];
             DBNSLog(@"Warmup complete.");
         }
@@ -241,12 +242,9 @@
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss.SSS"];
             
-            // wait a bit to make sure the camera is initialized
-            //[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]];
-            
             for (unsigned long seq = 0; ; ++seq)
             {
-                NSDate *now = [[NSDate alloc] init];
+                NSDate *now = [NSDate date];
                 NSString *nowstr = [dateFormatter stringFromDate:now];
                 
                 DBNSLog(@" - Snapshot %5lu", seq);
@@ -268,17 +266,16 @@
                 }
                 
                 // sleep
-                [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval: interval]];
-                
+                [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval:interval]];
             }
             
         } else
         {
             image = [snap snapshot];                // Capture a frame
         }
-        //NSLog(@"Stopping...");
+        //DBNSLog(@"Stopping...");
         [snap stopSession];                     // Stop session
-        //NSLog(@"Stopped.");
+        //DBNSLog(@"Stopped.");
     }
     
     
@@ -313,7 +310,7 @@
         
         if (frame == nil ) // Still no frame? Wait a little while.
         {
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow: 0.1]];
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         }
     }
     
