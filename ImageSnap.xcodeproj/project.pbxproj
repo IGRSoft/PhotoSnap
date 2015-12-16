@@ -3,13 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		A54A9CC11A83F4B6004D82DB /* ImageSnap.h in Headers */ = {isa = PBXBuildFile; fileRef = A54A9CC01A83F4B6004D82DB /* ImageSnap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A54A9CC31A83F4B6004D82DB /* ImageSnap.m in Sources */ = {isa = PBXBuildFile; fileRef = A54A9CC21A83F4B6004D82DB /* ImageSnap.m */; };
-		A54A9CC91A83F4B6004D82DB /* libImageSnap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A54A9CBE1A83F4B5004D82DB /* libImageSnap.a */; };
 		A54A9CD61A83F895004D82DB /* Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = A54A9CD51A83F894004D82DB /* Prefix.pch */; };
 		A54A9CE11A83F8F2004D82DB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A54A9CE01A83F8F2004D82DB /* AppDelegate.m */; };
 		A54A9CE31A83F8F2004D82DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A54A9CE21A83F8F2004D82DB /* main.m */; };
@@ -21,16 +20,6 @@
 		A5CB1AF51A84089E005AAB21 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51FA5EE7183F6D1300C9F2FA /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		A54A9CCA1A83F4B6004D82DB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A54A9CBD1A83F4B5004D82DB;
-			remoteInfo = ImageSnap;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		09AB6884FE841BABC02AAC07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		51FA5EE7183F6D1300C9F2FA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -38,8 +27,6 @@
 		A54A9CBE1A83F4B5004D82DB /* libImageSnap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libImageSnap.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A54A9CC01A83F4B6004D82DB /* ImageSnap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageSnap.h; sourceTree = "<group>"; };
 		A54A9CC21A83F4B6004D82DB /* ImageSnap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageSnap.m; sourceTree = "<group>"; };
-		A54A9CC81A83F4B6004D82DB /* ImageSnapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageSnapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A54A9CCE1A83F4B6004D82DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A54A9CD51A83F894004D82DB /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		A54A9CDB1A83F8F2004D82DB /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A54A9CDE1A83F8F2004D82DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -62,14 +49,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A54A9CC51A83F4B6004D82DB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A54A9CC91A83F4B6004D82DB /* libImageSnap.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A54A9CD81A83F8F2004D82DB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -87,7 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				A54A9CBF1A83F4B6004D82DB /* ImageSnap */,
-				A54A9CCC1A83F4B6004D82DB /* ImageSnapTests */,
 				A54A9CDC1A83F8F2004D82DB /* Example */,
 				C6859E96029091FE04C91782 /* Documentation */,
 				08FB779DFE84155DC02AAC07 /* Frameworks */,
@@ -111,7 +89,6 @@
 			isa = PBXGroup;
 			children = (
 				A54A9CBE1A83F4B5004D82DB /* libImageSnap.a */,
-				A54A9CC81A83F4B6004D82DB /* ImageSnapTests.xctest */,
 				A54A9CDB1A83F8F2004D82DB /* Example.app */,
 			);
 			name = Products;
@@ -125,22 +102,6 @@
 				A54A9CC21A83F4B6004D82DB /* ImageSnap.m */,
 			);
 			path = ImageSnap;
-			sourceTree = "<group>";
-		};
-		A54A9CCC1A83F4B6004D82DB /* ImageSnapTests */ = {
-			isa = PBXGroup;
-			children = (
-				A54A9CCD1A83F4B6004D82DB /* Supporting Files */,
-			);
-			path = ImageSnapTests;
-			sourceTree = "<group>";
-		};
-		A54A9CCD1A83F4B6004D82DB /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				A54A9CCE1A83F4B6004D82DB /* Info.plist */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		A54A9CDC1A83F8F2004D82DB /* Example */ = {
@@ -214,24 +175,6 @@
 			productReference = A54A9CBE1A83F4B5004D82DB /* libImageSnap.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		A54A9CC71A83F4B6004D82DB /* ImageSnapTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A54A9CD21A83F4B6004D82DB /* Build configuration list for PBXNativeTarget "ImageSnapTests" */;
-			buildPhases = (
-				A54A9CC41A83F4B6004D82DB /* Sources */,
-				A54A9CC51A83F4B6004D82DB /* Frameworks */,
-				A54A9CC61A83F4B6004D82DB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A54A9CCB1A83F4B6004D82DB /* PBXTargetDependency */,
-			);
-			name = ImageSnapTests;
-			productName = ImageSnapTests;
-			productReference = A54A9CC81A83F4B6004D82DB /* ImageSnapTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		A54A9CDA1A83F8F2004D82DB /* Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A54A9CF81A83F8F2004D82DB /* Build configuration list for PBXNativeTarget "Example" */;
@@ -255,12 +198,9 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0720;
 				TargetAttributes = {
 					A54A9CBD1A83F4B5004D82DB = {
-						CreatedOnToolsVersion = 6.1.1;
-					};
-					A54A9CC71A83F4B6004D82DB = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
 					A54A9CDA1A83F8F2004D82DB = {
@@ -269,7 +209,7 @@
 				};
 			};
 			buildConfigurationList = 1DEB924B08733DCA0010E9CD /* Build configuration list for PBXProject "ImageSnap" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -284,20 +224,12 @@
 			projectRoot = "";
 			targets = (
 				A54A9CBD1A83F4B5004D82DB /* ImageSnap */,
-				A54A9CC71A83F4B6004D82DB /* ImageSnapTests */,
 				A54A9CDA1A83F8F2004D82DB /* Example */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A54A9CC61A83F4B6004D82DB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A54A9CD91A83F8F2004D82DB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -318,13 +250,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A54A9CC41A83F4B6004D82DB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A54A9CD71A83F8F2004D82DB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -336,14 +261,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A54A9CCB1A83F4B6004D82DB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A54A9CBD1A83F4B5004D82DB /* ImageSnap */;
-			targetProxy = A54A9CCA1A83F4B6004D82DB /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		A54A9CE91A83F8F2004D82DB /* Main.storyboard */ = {
@@ -360,10 +277,11 @@
 		1DEB924C08733DCA0010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -374,7 +292,7 @@
 			buildSettings = {
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -455,90 +373,6 @@
 			};
 			name = Release;
 		};
-		A54A9CD31A83F4B6004D82DB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = ImageSnapTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		A54A9CD41A83F4B6004D82DB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = ImageSnapTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		A54A9CF91A83F8F2004D82DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -577,6 +411,7 @@
 				);
 				INFOPLIST_FILE = Example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.igrsoft.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -615,6 +450,7 @@
 				);
 				INFOPLIST_FILE = Example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.igrsoft.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -636,15 +472,6 @@
 			buildConfigurations = (
 				A54A9CD01A83F4B6004D82DB /* Debug */,
 				A54A9CD11A83F4B6004D82DB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A54A9CD21A83F4B6004D82DB /* Build configuration list for PBXNativeTarget "ImageSnapTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A54A9CD31A83F4B6004D82DB /* Debug */,
-				A54A9CD41A83F4B6004D82DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
