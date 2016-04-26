@@ -43,7 +43,8 @@
 	NSString        *dateString = @"snapshot_";
 	
 	formatter = [[NSDateFormatter alloc] init];
-	[formatter setDateFormat:@"dd-MM-yyyy_HH-mm-ss"];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+	[formatter setDateFormat:@"yyyy-MM-dd_HH:mm:ss"];
 	
 	dateString = [dateString stringByAppendingString:[formatter stringFromDate:[NSDate date]]];
 	dateString = [dateString stringByAppendingPathExtension:self.imageType.stringValue];
