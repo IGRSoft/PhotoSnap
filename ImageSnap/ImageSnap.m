@@ -16,14 +16,14 @@
  * to the file extension. If path is "-" (a dash), then
  * an jpeg representation is written to standard out.
  */
-+ (BOOL)saveImage:(NSImage *)image toPath:(NSString *)path;
++ (BOOL)saveImage:(NSImage * _Nonnull)image toPath:(NSString * _Nonnull)path;
 
 /**
  * Converts an NSImage to raw NSData according to a given
  * format. A simple string search is performed for such
  * characters as jpeg, tiff, png, and so forth.
  */
-+ (NSData *)dataFrom:(NSImage *)image asType:(NSString *)format;
++ (NSData *)dataFrom:(NSImage * _Nonnull)image asType:(NSString * _Nonnull)format;
 
 @property (strong, nonatomic) AVCaptureSession			*session;
 @property (strong, nonatomic) AVCaptureDeviceInput		*input;
@@ -54,7 +54,7 @@
 }
 
 // Returns an array of video devices attached to this computer.
-+ (NSArray *)videoDevices
++ (NSArray * _Nonnull)videoDevices
 {
     static NSMutableArray *results = nil;
     static dispatch_once_t onceToken;
@@ -69,7 +69,7 @@
 }
 
 // Returns the default video device or nil if none found.
-+ (AVCaptureDevice *)defaultVideoDevice
++ (AVCaptureDevice * _Nonnull)defaultVideoDevice
 {
     static AVCaptureDevice *device = nil;
     
@@ -87,7 +87,7 @@
 }
 
 // Returns the named capture device or nil if not found.
-+ (AVCaptureDevice *)deviceNamed:(NSString *)name
++ (AVCaptureDevice * _Nonnull)deviceNamed:(NSString * _Nonnull)name
 {
     AVCaptureDevice *result = nil;
     
@@ -104,7 +104,7 @@
 }
 
 // Saves an image to a file or standard out if path is nil or "-" (hyphen).
-+ (BOOL)saveImage:(NSImage *)image toPath:(NSString *)path
++ (BOOL)saveImage:(NSImage *)image toPath:(NSString * _Nonnull)path
 {
     BOOL result = NO;
     
@@ -136,7 +136,7 @@
  * Converts an NSImage into NSData. Defaults to jpeg if
  * format cannot be determined.
  */
-+ (NSData *)dataFrom:(NSImage *)image asType:(NSString *)format
++ (NSData *)dataFrom:(NSImage * _Nonnull)image asType:(NSString *_Nonnull)format
 {
     NSData *tiffData = [image TIFFRepresentation];
     
@@ -188,16 +188,16 @@
  * and saves the file.
  */
 
-+ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device toFile:(NSString *)path
++ (BOOL)saveSnapshotFrom:(AVCaptureDevice * _Nonnull)device toFile:(NSString * _Nonnull)path
 {
     return [self saveSnapshotFrom:device
                            toFile:path
                        withWarmup:nil];
 }
 
-+ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device
-                  toFile:(NSString *)path
-              withWarmup:(NSNumber *)warmup
++ (BOOL)saveSnapshotFrom:(AVCaptureDevice * _Nonnull)device
+                  toFile:(NSString * _Nonnull)path
+              withWarmup:(NSNumber * _Nullable)warmup
 {
     return [self saveSnapshotFrom:device
                            toFile:path
@@ -205,10 +205,10 @@
                     withTimelapse:nil];
 }
 
-+ (BOOL)saveSnapshotFrom:(AVCaptureDevice *)device
-                  toFile:(NSString *)path
-              withWarmup:(NSNumber *)warmup
-           withTimelapse:(NSNumber *)timelapse
++ (BOOL)saveSnapshotFrom:(AVCaptureDevice * _Nonnull)device
+                  toFile:(NSString * _Nonnull)path
+              withWarmup:(NSNumber * _Nullable)warmup
+           withTimelapse:(NSNumber * _Nullable)timelapse
 {
     ImageSnap *snap;
     NSImage *image = nil;
@@ -217,7 +217,7 @@
     snap = [[ImageSnap alloc] init];            // Instance of this ImageSnap class
     DBNSLog(@"Starting device...");
     
-    if ([snap startSession:device] ) // Try starting session
+    if ([snap startSession:device] )            // Try starting session
     {
         DBNSLog(@"Device started.");
         
@@ -241,6 +241,17 @@
             
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss.SSS"];
+            NSString *newPath = [path stringByDeletingLastPathComponent];
+            newPath = [newPath stringByAppendingPathComponent:@"timelapse"];
+            
+            BOOL isDir = NO;
+            if (![[NSFileManager defaultManager] fileExistsAtPath:newPath isDirectory:&isDir] || !isDir)
+            {
+                [[NSFileManager defaultManager] createDirectoryAtPath:newPath
+                                          withIntermediateDirectories:NO
+                                                           attributes:nil
+                                                                error:nil];
+            }
             
             for (unsigned long seq = 0; ; ++seq)
             {
@@ -251,19 +262,12 @@
                 DBNSLog(@" (%s)", [nowstr UTF8String]);
                 
                 // create filename
-                NSString *filename = [NSString stringWithFormat:@"snapshot-%05lu-%s.jpg", seq, [nowstr UTF8String]];
+                NSString *filename = [newPath stringByAppendingFormat:@"/snapshot-%05lu-%s.jpg", seq, [nowstr UTF8String]];
                 
                 // capture and write
-                image = [snap snapshot];                // Capture a frame
-                if (image != nil)
-                {
-                    [ImageSnap saveImage:image toPath:filename];
-                    DBNSLog(@"%@", filename);
-                }
-                else
-                {
-                    DBNSLog(@"Image capture failed.");
-                }
+                image = [snap snapshot];
+                [ImageSnap saveImage:image toPath:filename];
+                DBNSLog(@"%@", filename);
                 
                 // sleep
                 [[NSRunLoop currentRunLoop] runUntilDate:[now dateByAddingTimeInterval:interval]];
@@ -271,44 +275,37 @@
             
         } else
         {
-            image = [snap snapshot];                // Capture a frame
+            image = [snap snapshot];            // Capture a frame
         }
-        //DBNSLog(@"Stopping...");
+        
+        DBNSLog(@"Stopping...");
         [snap stopSession];                     // Stop session
-        //DBNSLog(@"Stopped.");
+        DBNSLog(@"Stopped.");
     }
     
-    
-    if ( interval > 0 )
-    {
-        return YES;
-    }
-    else
-    {
-        return image == nil ? NO : [ImageSnap saveImage:image toPath:path];
-    }
+    return (interval > 0) ? YES : [ImageSnap saveImage:image toPath:path];
 }
 
 /**
  * Returns current snapshot or nil if there is a problem
  * or session is not started.
  */
-- (NSImage *)snapshot
+- (NSImage * _Nonnull)snapshot
 {
-    DBNSLog(@ "Taking snapshot...");
+    DBNSLog(@"Taking snapshot...");
     
     CVImageBufferRef frame = nil;               // Hold frame we find
-    while( frame == nil ) // While waiting for a frame
+    while (frame == nil) // While waiting for a frame
     {
-        DBNSLog(@ "\tEntering synchronized block to see if frame is captured yet...");
+        DBNSLog(@"\tEntering synchronized block to see if frame is captured yet...");
         @synchronized(self) // Lock since capture is on another thread
         {
             frame = mCurrentImageBuffer;        // Hold current frame
             CVBufferRetain(frame);              // Retain it (OK if nil)
         }
-        DBNSLog(@ "Done." );
+        DBNSLog(@"Done." );
         
-        if (frame == nil ) // Still no frame? Wait a little while.
+        if (frame == nil) // Still no frame? Wait a little while.
         {
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         }
@@ -318,7 +315,7 @@
     NSCIImageRep *imageRep = [NSCIImageRep imageRepWithCIImage:[CIImage imageWithCVImageBuffer:frame]];
     NSImage *image = [[NSImage alloc] initWithSize:[imageRep size]];
     [image addRepresentation:imageRep];
-    DBNSLog(@ "Snapshot taken." );
+    DBNSLog(@"Snapshot taken." );
     
     return image;
 }
@@ -358,11 +355,11 @@
 /**
  * Begins the capture session. Frames begin coming in.
  */
-- (BOOL)startSession:(AVCaptureDevice *)device
+- (BOOL)startSession:(AVCaptureDevice * _Nonnull)device
 {
     DBNSLog(@ "Starting capture session..." );
     
-    if (device == nil )
+    if (device == nil)
     {
         DBNSLog(@ "\tCannot start session: no device provided." );
         return NO;
@@ -423,6 +420,7 @@
 }
 
 #pragma mark - AVCaptureVideoDataOutput Delegate
+
 // This delegate method is called whenever the AVCaptureVideoOutput receives frame
 - (void)captureOutput:(AVCaptureOutput *)captureOutput
 didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer

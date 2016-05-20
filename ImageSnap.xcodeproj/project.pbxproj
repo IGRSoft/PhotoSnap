@@ -48,13 +48,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A54A9CBB1A83F4B5004D82DB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A54A9CD81A83F8F2004D82DB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -175,7 +168,6 @@
 			buildConfigurationList = A54A9CCF1A83F4B6004D82DB /* Build configuration list for PBXNativeTarget "ImageSnap" */;
 			buildPhases = (
 				A54A9CBA1A83F4B5004D82DB /* Sources */,
-				A54A9CBB1A83F4B5004D82DB /* Frameworks */,
 				A54A9CBC1A83F4B5004D82DB /* Headers */,
 			);
 			buildRules = (
