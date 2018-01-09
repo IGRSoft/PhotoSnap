@@ -9,7 +9,7 @@
 
 #import "ImageSnap.h"
 
-@interface ImageSnap ()
+@interface ImageSnap () <AVCaptureVideoDataOutputSampleBufferDelegate>
 
 /**
  * Writes an NSImage to disk, formatting it according
@@ -23,7 +23,7 @@
  * format. A simple string search is performed for such
  * characters as jpeg, tiff, png, and so forth.
  */
-+ (NSData *)dataFrom:(NSImage * _Nonnull)image asType:(NSString * _Nonnull)format;
++ (NSData * _Nonnull)dataFrom:(NSImage * _Nonnull)image asType:(NSString * _Nonnull)format;
 
 @property (strong, nonatomic) AVCaptureSession			*session;
 @property (strong, nonatomic) AVCaptureDeviceInput		*input;
@@ -31,7 +31,9 @@
 
 @end
 
-@implementation ImageSnap
+@implementation ImageSnap {
+    CVImageBufferRef mCurrentImageBuffer;
+}
 
 - (instancetype)init
 {
@@ -54,13 +56,13 @@
 }
 
 // Returns an array of video devices attached to this computer.
-+ (NSArray * _Nonnull)videoDevices
++ (NSArray <AVCaptureDevice *> * _Nonnull)videoDevices
 {
     static NSMutableArray *results = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        results = [NSMutableArray arrayWithCapacity:3];
+        results = [NSMutableArray array];
         [results addObjectsFromArray:[AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]];
         [results addObjectsFromArray:[AVCaptureDevice devicesWithMediaType:AVMediaTypeMuxed]];
     });
@@ -89,22 +91,14 @@
 // Returns the named capture device or nil if not found.
 + (AVCaptureDevice * _Nonnull)deviceNamed:(NSString * _Nonnull)name
 {
-    AVCaptureDevice *result = nil;
-    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"localizedName == %@", name];
     NSArray *devices = [ImageSnap videoDevices];
-    for( AVCaptureDevice *device in devices )
-    {
-        if ( [name isEqualToString:[device description]] )
-        {
-            result = device;
-        }
-    }
     
-    return result;
+    return [devices filteredArrayUsingPredicate:predicate].firstObject;
 }
 
 // Saves an image to a file or standard out if path is nil or "-" (hyphen).
-+ (BOOL)saveImage:(NSImage *)image toPath:(NSString * _Nonnull)path
++ (BOOL)saveImage:(NSImage * _Nonnull)image toPath:(NSString * _Nonnull)path
 {
     BOOL result = NO;
     
@@ -211,7 +205,7 @@
            withTimelapse:(NSNumber * _Nullable)timelapse
 {
     ImageSnap *snap;
-    NSImage *image = nil;
+    NSImage *image = [NSImage new];
     double interval = timelapse.doubleValue <= 0 ? -1 : [timelapse doubleValue];
     
     snap = [[ImageSnap alloc] init];            // Instance of this ImageSnap class
@@ -328,15 +322,15 @@
     DBNSLog(@"Stopping session..." );
     
     // Make sure we've stopped
-    while( _session != nil )
+    while(self.session != nil )
     {
         DBNSLog(@"\tCaptureSession != nil");
         
         DBNSLog(@"\tStopping CaptureSession...");
-        [_session stopRunning];
+        [self.session stopRunning];
         DBNSLog(@"Done.");
         
-        if ([_session isRunning] )
+        if ([self.session isRunning] )
         {
             DBNSLog(@ "[mCaptureSession isRunning]");
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow: 0.1]];
@@ -366,13 +360,11 @@
     }
     
     // If we've already started with this device, return
-    if ([device isEqual:[_input device]] &&
-        _session != nil &&
-        [_session isRunning] )
+    if ([device isEqual:[self.input device]] && [self.session isRunning] )
     {
         return YES;
     }
-    else if (_session != nil )
+    else if (self.session != nil )
     {
         DBNSLog(@ "\tStopping previous session." );
         [self stopSession];
@@ -381,25 +373,25 @@
     // Create the capture session
     DBNSLog(@ "\tCreating AVCaptureSession..." );
     _session = [[AVCaptureSession alloc] init];
-    _session.sessionPreset = AVCaptureSessionPresetHigh;
+    self.session.sessionPreset = AVCaptureSessionPresetHigh;
     DBNSLog(@ "Done.");
     
     // Create input object from the device
     DBNSLog(@ "\tCreating AVCaptureDeviceInput with %s...", [[device description] UTF8String] );
     _input = [AVCaptureDeviceInput deviceInputWithDevice:device error:NULL];
     DBNSLog(@ "Done.");
-    [_session addInput:_input];
+    [self.session addInput:self.input];
     
     // Decompressed video output
     DBNSLog(@ "\tCreating AVCaptureDecompressedVideoOutput...");
     _output = [[AVCaptureVideoDataOutput alloc] init];
-    _output.videoSettings = @{ (NSString *)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA) };
+    self.output.videoSettings = @{ (NSString *)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA) };
     
     // Add sample buffer serial queue
     dispatch_queue_t queue = dispatch_queue_create("VideoCaptureQueue", NULL);
-    [_output setSampleBufferDelegate:self queue:queue];
+    [self.output setSampleBufferDelegate:self queue:queue];
     DBNSLog(@ "Done." );
-    [_session addOutput:_output];
+    [self.session addOutput:self.output];
     
     // Clear old image?
     DBNSLog(@"\tEntering synchronized block to clear memory...");
@@ -413,7 +405,7 @@
     }
     DBNSLog(@ "Done.");
     
-    [_session startRunning];
+    [self.session startRunning];
     DBNSLog(@"Session started.");
     
     return YES;

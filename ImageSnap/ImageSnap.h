@@ -10,10 +10,7 @@
 #import <Cocoa/Cocoa.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface ImageSnap : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
-{
-    CVImageBufferRef mCurrentImageBuffer;
-}
+@interface ImageSnap : NSObject
 
 /**
  * Returns all attached AVCaptureDevice objects that have video.
@@ -22,7 +19,7 @@
  *
  * @return autoreleased array of video devices
  */
-+ (NSArray * _Nonnull)videoDevices;
++ (NSArray <AVCaptureDevice *> * _Nonnull)videoDevices;
 
 /**
  * Returns the default AVCaptureDevice object for video
