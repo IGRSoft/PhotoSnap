@@ -5,6 +5,8 @@
 //  Created by Vitalii Parovishnyk on 27.11.2020.
 //
 
+#if os(macOS)
+
 import Foundation
 
 struct PhotoSnapConfiguration {
@@ -36,5 +38,6 @@ struct PhotoSnapConfiguration {
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss.SSS"
     }
-    
 }
+
+#endif

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotoSnap
 
 struct ContentView: View {
     @State private var warmup: Double = 0.0

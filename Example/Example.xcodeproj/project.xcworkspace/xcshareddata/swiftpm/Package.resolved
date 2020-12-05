@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "PhotoSnap",
+        "repositoryURL": "/Users/korich/Projects/PhotoSnap",
+        "state": {
+          "branch": "swift",
+          "revision": "e3eb25ee17e78bf08f3f1e359496ccd8d23b5292",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

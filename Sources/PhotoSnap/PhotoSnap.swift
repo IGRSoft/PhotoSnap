@@ -5,6 +5,8 @@
 //  Created by Vitalii Parovishnyk on 26.11.2020.
 //
 
+#if os(macOS)
+
 import AppKit
 import AVFoundation
 import CoreVideo
@@ -218,3 +220,5 @@ extension PhotoSnap: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     }
 }
+
+#endif

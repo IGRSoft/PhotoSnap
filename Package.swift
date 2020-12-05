@@ -21,9 +21,17 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "PhotoSnap",
-            dependencies: []),
+            dependencies: [],
+            path: "Sources",
+            linkerSettings: [.linkedFramework("AppKit",
+                                              .when(platforms: [.macOS])),
+                             .linkedFramework("AVFoundation",
+                                                               .when(platforms: [.macOS]))]
+        ),
         .testTarget(
             name: "PhotoSnapTests",
-            dependencies: ["PhotoSnap"]),
-    ]
+            dependencies: ["PhotoSnap"]
+        ),
+    ],
+    swiftLanguageVersions: [.v5]
 )

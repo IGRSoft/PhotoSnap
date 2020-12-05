@@ -5,6 +5,8 @@
 //  Created by Vitalii Parovishnyk on 29.11.2020.
 //
 
+#if os(macOS)
+
 import AppKit
 
 extension NSImage {
@@ -56,3 +58,5 @@ extension NSImage {
         return result
     }
 }
+
+#endif
