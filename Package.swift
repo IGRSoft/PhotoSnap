@@ -22,7 +22,7 @@ let package = Package(
         .target(
             name: "PhotoSnap",
             dependencies: [],
-            path: "Sources",
+            path: "Sources/PhotoSnap",
             linkerSettings: [.linkedFramework("AppKit",
                                               .when(platforms: [.macOS])),
                              .linkedFramework("AVFoundation",
