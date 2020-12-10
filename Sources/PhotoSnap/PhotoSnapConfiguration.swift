@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct PhotoSnapConfiguration {
+public struct PhotoSnapConfiguration {
     
-    enum ImageType: String {
+    public enum ImageType: String, CaseIterable {
         case png
         case tiff
         case jpeg
@@ -17,17 +17,17 @@ struct PhotoSnapConfiguration {
         case gif
     }
     
-    var isSaveToFile = false
+    public var isSaveToFile = false
     
-    var imageType: ImageType = .png
+    public var imageType: ImageType = .png
     
-    var dateFormatter = DateFormatter()
+    public var dateFormatter = DateFormatter()
     
-    var rootDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("PhotoSnap")
+    public var rootDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("PhotoSnap")
     
-    var filePrefix = "snapshot_"
+    public var filePrefix = "snapshot_"
     
-    var filePathURL: URL {
+    public var filePathURL: URL {
         return rootDir.appendingPathComponent("\(filePrefix)\(dateFormatter.string(from: Date()))")
             .appendingPathExtension("\(imageType.rawValue)")
     }
@@ -36,5 +36,4 @@ struct PhotoSnapConfiguration {
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss.SSS"
     }
-    
 }
