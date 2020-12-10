@@ -9,6 +9,6 @@ import AppKit
 import Foundation
 
 public struct PhotoSnapModel {
-    var images = [NSImage]()
-    var pathes = [URL]()
+    public var images = [NSImage]()
+    public var pathes = [URL]()
 }

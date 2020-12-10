@@ -9,7 +9,7 @@ import Foundation
 
 public struct PhotoSnapConfiguration {
     
-    enum ImageType: String {
+    public enum ImageType: String {
         case png
         case tiff
         case jpeg
@@ -17,17 +17,17 @@ public struct PhotoSnapConfiguration {
         case gif
     }
     
-    var isSaveToFile = false
+    public var isSaveToFile = false
     
-    var imageType: ImageType = .png
+    public var imageType: ImageType = .png
     
-    var dateFormatter = DateFormatter()
+    public var dateFormatter = DateFormatter()
     
-    var rootDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("PhotoSnap")
+    public var rootDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("PhotoSnap")
     
-    var filePrefix = "snapshot_"
+    public var filePrefix = "snapshot_"
     
-    var filePathURL: URL {
+    public var filePathURL: URL {
         return rootDir.appendingPathComponent("\(filePrefix)\(dateFormatter.string(from: Date()))")
             .appendingPathExtension("\(imageType.rawValue)")
     }
