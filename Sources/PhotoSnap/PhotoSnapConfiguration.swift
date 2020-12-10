@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PhotoSnapConfiguration {
+public struct PhotoSnapConfiguration {
     
     enum ImageType: String {
         case png

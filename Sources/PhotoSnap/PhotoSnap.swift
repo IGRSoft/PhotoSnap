@@ -15,21 +15,21 @@ class Logger {
     }
 }
 
-class PhotoSnap: NSObject {
+public class PhotoSnap: NSObject {
     
-    var photoSnapConfiguration = PhotoSnapConfiguration()
+    public var photoSnapConfiguration = PhotoSnapConfiguration()
     
-    let lockQueue = DispatchQueue(label: "com.igrsoft.PhotoSnap")
-    let videoCaptureQueue = DispatchQueue(label: "com.igrsoft.VideoCaptureQueue")
+    private let lockQueue = DispatchQueue(label: "com.igrsoft.PhotoSnap")
+    private let videoCaptureQueue = DispatchQueue(label: "com.igrsoft.VideoCaptureQueue")
     
-    let captureSession = AVCaptureSession()
+    private let captureSession = AVCaptureSession()
     
     private var input: AVCaptureDeviceInput? = nil
     private var output: AVCaptureVideoDataOutput? = nil
     
     private var mCurrentImageBuffer: CVImageBuffer? = nil
     
-    lazy var session: AVCaptureDevice.DiscoverySession = {
+    public lazy var session: AVCaptureDevice.DiscoverySession = {
         let s = AVCaptureDevice.DiscoverySession (
             deviceTypes: [ .builtInWideAngleCamera, .externalUnknown ],
             mediaType: .video,
@@ -37,7 +37,7 @@ class PhotoSnap: NSObject {
         return s
     }()
     
-    lazy var defaultDevice: AVCaptureDevice? = {
+    public lazy var defaultDevice: AVCaptureDevice? = {
         return session.devices.first
     }()
     
@@ -66,7 +66,7 @@ class PhotoSnap: NSObject {
         return snapshot
     }
     
-    func fetchSnapshot(from d: AVCaptureDevice? = nil,
+    public func fetchSnapshot(from d: AVCaptureDevice? = nil,
                        withWarmup warmup: Int = 0,
                        withTimelapse timelapse: Double = 0.0,
                        resultBlock: @escaping (PhotoSnapModel) -> Void) {
@@ -139,7 +139,7 @@ class PhotoSnap: NSObject {
         resultBlock(model)
     }
     
-    func stopSession() {
+    private func stopSession() {
         Logger.debug("Stopping session...")
         
         // Make sure we've stopped
@@ -162,7 +162,7 @@ class PhotoSnap: NSObject {
         }
     }
     
-    func startSession(_ device: AVCaptureDevice) -> Bool {
+    private func startSession(_ device: AVCaptureDevice) -> Bool {
         Logger.debug("\tStopping previous session.")
         stopSession()
         
@@ -209,7 +209,7 @@ class PhotoSnap: NSObject {
 }
 
 extension PhotoSnap: AVCaptureVideoDataOutputSampleBufferDelegate {
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // Swap out old frame for new one
         let videoFrame = CMSampleBufferGetImageBuffer(sampleBuffer)
         
