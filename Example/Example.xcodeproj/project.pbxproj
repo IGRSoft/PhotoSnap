@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A5CFFEDF257BB1C700036309 /* PhotoSnap in Frameworks */ = {isa = PBXBuildFile; productRef = A5CFFEDE257BB1C700036309 /* PhotoSnap */; };
+		A53C10DF258281C800FD92D5 /* PhotoSnap in Frameworks */ = {isa = PBXBuildFile; productRef = A53C10DE258281C800FD92D5 /* PhotoSnap */; };
 		A5E8011D257011D500620ED9 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8011C257011D500620ED9 /* ExampleApp.swift */; };
 		A5E8011F257011D500620ED9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8011E257011D500620ED9 /* ContentView.swift */; };
 		A5E80121257011D700620ED9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E80120257011D700620ED9 /* Assets.xcassets */; };
@@ -54,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A5CFFEDF257BB1C700036309 /* PhotoSnap in Frameworks */,
+				A53C10DF258281C800FD92D5 /* PhotoSnap in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,7 +151,7 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				A5CFFEDE257BB1C700036309 /* PhotoSnap */,
+				A53C10DE258281C800FD92D5 /* PhotoSnap */,
 			);
 			productName = Example;
 			productReference = A5E80119257011D500620ED9 /* Example.app */;
@@ -225,7 +225,7 @@
 			);
 			mainGroup = A5E80110257011D500620ED9;
 			packageReferences = (
-				A5CFFEDD257BB1C700036309 /* XCRemoteSwiftPackageReference "PhotoSnap" */,
+				A53C10DD258281C800FD92D5 /* XCRemoteSwiftPackageReference "PhotoSnap" */,
 			);
 			productRefGroup = A5E8011A257011D500620ED9 /* Products */;
 			projectDirPath = "";
@@ -595,7 +595,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A5CFFEDD257BB1C700036309 /* XCRemoteSwiftPackageReference "PhotoSnap" */ = {
+		A53C10DD258281C800FD92D5 /* XCRemoteSwiftPackageReference "PhotoSnap" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "file:///Users/korich/Projects/PhotoSnap";
 			requirement = {
@@ -606,9 +606,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A5CFFEDE257BB1C700036309 /* PhotoSnap */ = {
+		A53C10DE258281C800FD92D5 /* PhotoSnap */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A5CFFEDD257BB1C700036309 /* XCRemoteSwiftPackageReference "PhotoSnap" */;
+			package = A53C10DD258281C800FD92D5 /* XCRemoteSwiftPackageReference "PhotoSnap" */;
 			productName = PhotoSnap;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -9,7 +9,7 @@ import Foundation
 
 public struct PhotoSnapConfiguration {
     
-    public enum ImageType: String {
+    public enum ImageType: String, CaseIterable {
         case png
         case tiff
         case jpeg
