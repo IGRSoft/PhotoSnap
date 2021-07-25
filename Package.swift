@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "PhotoSnap",
-    platforms: [.macOS(.v10_15)],
+    platforms: [.macOS(.v11)],
     products: [
         .library(
             name: "PhotoSnap",
@@ -15,8 +15,8 @@ let package = Package(
         .target(
             name: "PhotoSnap",
             linkerSettings: [
-                             .linkedFramework("AVFoundation",
-                                                               .when(platforms: [.macOS]))]
+                .linkedFramework("AVFoundation",
+                                 .when(platforms: [.macOS]))]
         ),
         .testTarget(
             name: "PhotoSnapTests",

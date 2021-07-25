@@ -5,8 +5,8 @@ A Lib lets you capture still images from an iSight or other video source.
 
 ## Requirements
 
-- macOS 10.15+
-- Xcode 11+
+- macOS 11.0+
+- Xcode 11.4+
 - Swift 5.1+
 
 # Installation
@@ -39,3 +39,4 @@ PhotoSnap is available under the MIT license. See the [LICENSE](LICENSE) file fo
 # Changes
 =============
  * v0.1 - This is the initial release.
+ 

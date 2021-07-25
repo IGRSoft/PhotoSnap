@@ -11,7 +11,9 @@ import CoreVideo
 
 class Logger {
     class func debug(_ msg: String) {
-        //print(msg)
+        #if DEBUG
+        print(msg)
+        #endif
     }
 }
 
@@ -30,11 +32,10 @@ public class PhotoSnap: NSObject {
     private var mCurrentImageBuffer: CVImageBuffer? = nil
     
     public lazy var session: AVCaptureDevice.DiscoverySession = {
-        let s = AVCaptureDevice.DiscoverySession (
-            deviceTypes: [ .builtInWideAngleCamera, .externalUnknown ],
-            mediaType: .video,
-            position: .unspecified)
-        return s
+        let session = AVCaptureDevice.DiscoverySession ( deviceTypes: [ .builtInWideAngleCamera, .externalUnknown ],
+                                                         mediaType: .video,
+                                                         position: .unspecified)
+        return session
     }()
     
     public lazy var defaultDevice: AVCaptureDevice? = {
@@ -66,14 +67,22 @@ public class PhotoSnap: NSObject {
         return snapshot
     }
     
-    public func fetchSnapshot(from d: AVCaptureDevice? = nil,
-                       withWarmup warmup: Int = 0,
-                       withTimelapse timelapse: Double = 0.0,
-                       resultBlock: @escaping (PhotoSnapModel) -> Void) {
+    public func fetchSnapshot(from captureDevice: AVCaptureDevice? = nil,
+                              withWarmup warmup: Int = 0,
+                              withTimelapse timelapse: Double = 0.0,
+                              resultBlock: @escaping (PhotoSnapModel) -> Void) {
         
         var model = PhotoSnapModel()
         
-        let device = d ?? self.defaultDevice!
+        let cameraDevice = captureDevice ?? self.defaultDevice
+        
+        guard let device = cameraDevice else {
+            assert(false, "can't find any Capture Device")
+            
+            resultBlock(model)
+            
+            return
+        }
         
         Logger.debug("Starting device...")
         if self.startSession(device) {
@@ -95,6 +104,7 @@ public class PhotoSnap: NSObject {
                         do {
                             try fm.createDirectory(at: photoSnapConfiguration.rootDir, withIntermediateDirectories: false, attributes: nil)
                         } catch {
+                            Logger.debug("Can't create a folder: \(photoSnapConfiguration.rootDir)")
                         }
                     }
                 }
