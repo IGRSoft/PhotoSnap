@@ -599,7 +599,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "file:///Users/korich/Projects/PhotoSnap";
 			requirement = {
-				branch = swift;
+				branch = master;
 				kind = branch;
 			};
 		};
