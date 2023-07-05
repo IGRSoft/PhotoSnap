@@ -20,9 +20,9 @@ final class PhotoSnapModelTest: XCTestCase {
         model.images.append(img)
         XCTAssertEqual(model.images.count, 2)
         
-        model.pathes.append(URL(fileURLWithPath: path))
-        XCTAssertEqual(model.pathes.count, 1)
-        XCTAssertTrue(model.pathes.first != nil)
+        model.paths.append(URL(fileURLWithPath: path))
+        XCTAssertEqual(model.paths.count, 1)
+        XCTAssertTrue(model.paths.first != nil)
     }
 
     static var allTests = [

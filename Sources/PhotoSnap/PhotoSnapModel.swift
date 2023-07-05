@@ -10,5 +10,5 @@ import Foundation
 
 public struct PhotoSnapModel {
     public var images = [NSImage]()
-    public var pathes = [URL]()
+    public var paths = [URL]()
 }

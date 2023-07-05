@@ -15,16 +15,14 @@ extension NSImage {
         var imageProps = [NSBitmapImageRep.PropertyKey : Any]()
         
         switch type {
-        
+            
         case .png:
             imageType = .png
         case .tiff:
             imageType = .tiff
         case .jpeg:
             imageType = .jpeg
-            imageProps = [
-                NSBitmapImageRep.PropertyKey.compressionFactor: 0.9
-            ]
+            imageProps = [NSBitmapImageRep.PropertyKey.compressionFactor: 0.9]
         case .bmp:
             imageType = .bmp
         case .gif:

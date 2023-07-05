@@ -9,7 +9,7 @@ import SwiftUI
 import PhotoSnap
 
 struct ContentView: View {
-    @State private var warmup: Double = 0.0
+    @State private var warmup: Double = 1.0
     @State private var timelapse: Double = 0.0
     
     @State private var imageType: PhotoSnapConfiguration.ImageType = .png
@@ -29,7 +29,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 32.0) {
-            VStack(spacing: 16.0) {
+            VStack {
                 Menu("Image Type: (\(imageType.rawValue))") {
                     Button(PhotoSnapConfiguration.ImageType.png.rawValue) {
                         imageType = .png
@@ -47,21 +47,21 @@ struct ContentView: View {
                         imageType = .gif
                     }
                 }
-                HStack(spacing: 8.0) {
+                HStack{
                     Text("Warmup:")
                     Slider(value: $warmup, in: 0...10, step: 1.0)
                     Text(numberFormatter.string(for: warmup)!)
                 }
-                HStack(spacing: 8.0) {
+                HStack {
                     Text("Timelapse:")
                     Slider(value: $timelapse, in: 0...10, step: 0.5)
                     Text(numberFormatter.string(for: timelapse)!)
                 }
-                HStack(spacing: 8.0) {
+                HStack {
                     Button("Take Photo") {
                         takePhoto()
                     }
-                    .padding(8.0)
+                    .padding()
                     Toggle(isOn: $isSaveToFile) {
                         Text("Save to file")
                     }
@@ -82,13 +82,12 @@ struct ContentView: View {
     func takePhoto() {
         let ps = PhotoSnap()
         ps.photoSnapConfiguration.isSaveToFile = isSaveToFile
-        ps.fetchSnapshot(withWarmup: Int(warmup),
-                         withTimelapse: timelapse) { photoModel in
+        ps.fetchSnapshot(withWarmup: Int(warmup), withTimelapse: timelapse) { photoModel in
             if let img = photoModel.images.last {
                 self.image = Image(nsImage: img)
             }
             
-            if let picturePath = photoModel.pathes.last {
+            if let picturePath = photoModel.paths.last {
                 path = picturePath.absoluteString
             }
             else {

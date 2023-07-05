@@ -5,9 +5,9 @@ A Lib lets you capture still images from an iSight or other video source.
 
 ## Requirements
 
-- macOS 11.0+
-- Xcode 11.4+
-- Swift 5.1+
+- macOS 11.4+
+- Xcode 13.0+
+- Swift 5.5+
 
 # Installation
 ### Swift Package Manager

@@ -11,9 +11,9 @@ import CoreVideo
 
 class Logger {
     class func debug(_ msg: String) {
-        #if DEBUG
+#if DEBUG
         print(msg)
-        #endif
+#endif
     }
 }
 
@@ -68,7 +68,7 @@ public class PhotoSnap: NSObject {
     }
     
     public func fetchSnapshot(from captureDevice: AVCaptureDevice? = nil,
-                              withWarmup warmup: Int = 0,
+                              withWarmup warmup: Int = 1,
                               withTimelapse timelapse: Double = 0.0,
                               resultBlock: @escaping (PhotoSnapModel) -> Void) {
         
@@ -123,7 +123,7 @@ public class PhotoSnap: NSObject {
                     if let image = self.readCurrentFrame() {
                         if photoSnapConfiguration.isSaveToFile {
                             image.save(to: updatedFilePath, for: photoSnapConfiguration.imageType)
-                            model.pathes.append(updatedFilePath)
+                            model.paths.append(updatedFilePath)
                         }
                         model.images.append(image)
                     }
@@ -138,7 +138,7 @@ public class PhotoSnap: NSObject {
                 let filePath = photoSnapConfiguration.filePathURL
                 if photoSnapConfiguration.isSaveToFile {
                     image.save(to: filePath, for: photoSnapConfiguration.imageType)
-                    model.pathes.append(filePath)
+                    model.paths.append(filePath)
                 }
                 model.images.append(image)
             }
