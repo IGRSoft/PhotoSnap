@@ -17,19 +17,40 @@ class Logger {
     }
 }
 
+// The lock retains each frame while it crosses the delegate queue into the capture actor.
+private final class LatestFrame: @unchecked Sendable {
+    private let lock = NSLock()
+    private var frame: CVImageBuffer?
+
+    func store(_ frame: CVImageBuffer?) {
+        lock.lock()
+        self.frame = frame
+        lock.unlock()
+    }
+
+    func load() -> CVImageBuffer? {
+        lock.lock()
+        defer { lock.unlock() }
+        return frame
+    }
+
+    func clear() {
+        store(nil)
+    }
+}
+
+@MainActor
 public class PhotoSnap: NSObject {
     
     public var photoSnapConfiguration = PhotoSnapConfiguration()
     
-    private let lockQueue = DispatchQueue(label: "com.igrsoft.PhotoSnap")
     private let videoCaptureQueue = DispatchQueue(label: "com.igrsoft.VideoCaptureQueue")
+    private let latestFrame = LatestFrame()
     
     private let captureSession = AVCaptureSession()
     
     private var input: AVCaptureDeviceInput? = nil
     private var output: AVCaptureVideoDataOutput? = nil
-    
-    private var mCurrentImageBuffer: CVImageBuffer? = nil
     
     public lazy var session: AVCaptureDevice.DiscoverySession = {
         let session = AVCaptureDevice.DiscoverySession ( deviceTypes: [ .builtInWideAngleCamera, .externalUnknown ],
@@ -47,9 +68,7 @@ public class PhotoSnap: NSObject {
         var frame: CVImageBuffer? = nil // Hold frame we find
         while frame == nil {
             Logger.debug("\tEntering synchronized block to see if frame is captured yet...")
-            lockQueue.sync {
-                frame = mCurrentImageBuffer // Hold current frame
-            }
+            frame = latestFrame.load()
             Logger.debug("Done.")
             
             if frame == nil {
@@ -58,7 +77,8 @@ public class PhotoSnap: NSObject {
         }
         
         // Convert frame to an NSImage
-        let imageRep = NSCIImageRep(ciImage: CIImage(cvImageBuffer: frame!))
+        guard let frame else { return nil }
+        let imageRep = NSCIImageRep(ciImage: CIImage(cvImageBuffer: frame))
         let snapshot = NSImage(size: imageRep.size)
         snapshot.addRepresentation(imageRep)
         
@@ -77,8 +97,6 @@ public class PhotoSnap: NSObject {
         let cameraDevice = captureDevice ?? self.defaultDevice
         
         guard let device = cameraDevice else {
-            assert(false, "can't find any Capture Device")
-            
             resultBlock(model)
             
             return
@@ -163,13 +181,15 @@ public class PhotoSnap: NSObject {
             if captureSession.isRunning {
                 Logger.debug("[mCaptureSession isRunning]")
                 RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-            } else {
-                Logger.debug("\tShutting down 'stopSession(..)'")
-                
-                input = nil
-                output = nil
             }
         }
+
+        output?.setSampleBufferDelegate(nil, queue: nil)
+        for input in captureSession.inputs { captureSession.removeInput(input) }
+        for output in captureSession.outputs { captureSession.removeOutput(output) }
+        input = nil
+        output = nil
+        latestFrame.clear()
     }
     
     private func startSession(_ device: AVCaptureDevice) -> Bool {
@@ -187,9 +207,17 @@ public class PhotoSnap: NSObject {
         do {
             input = try AVCaptureDeviceInput(device: device)
         } catch {
+            Logger.debug("Can't create capture input: \(error)")
+            stopSession()
+            return false
         }
         Logger.debug("Done.");
-        captureSession.addInput(input!)
+        guard let input, captureSession.canAddInput(input) else {
+            Logger.debug("Can't add capture input")
+            stopSession()
+            return false
+        }
+        captureSession.addInput(input)
         
         // Decompressed video output
         Logger.debug("\tCreating AVCaptureDecompressedVideoOutput...");
@@ -201,14 +229,17 @@ public class PhotoSnap: NSObject {
         // Add sample buffer serial queue
         output?.setSampleBufferDelegate(self, queue: videoCaptureQueue)
         Logger.debug("Done.");
-        captureSession.addOutput(output!)
+        guard let output, captureSession.canAddOutput(output) else {
+            Logger.debug("Can't add capture output")
+            stopSession()
+            return false
+        }
+        captureSession.addOutput(output)
         
         // Clear old image?
         Logger.debug("\tEntering synchronized block to clear memory...")
         
-        lockQueue.sync {
-            mCurrentImageBuffer = nil
-        }
+        latestFrame.clear()
         Logger.debug("Done.")
         
         captureSession.startRunning()
@@ -219,12 +250,14 @@ public class PhotoSnap: NSObject {
 }
 
 extension PhotoSnap: AVCaptureVideoDataOutputSampleBufferDelegate {
-    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    nonisolated public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // Swap out old frame for new one
         let videoFrame = CMSampleBufferGetImageBuffer(sampleBuffer)
         
-        lockQueue.sync {
-            mCurrentImageBuffer = videoFrame
-        }
+        latestFrame.store(videoFrame)
     }
 }
+
+// MARK: - Test Info
+// @test-file: Tests/PhotoSnapTests/PhotoSnapTests.swift
+// @test-coverage: Capture object configuration without camera hardware
