@@ -5,9 +5,9 @@ A Lib lets you capture still images from an iSight or other video source.
 
 ## Requirements
 
-- macOS 11.4+
-- Xcode 13.0+
-- Swift 5.5+
+- macOS 11.4+ for the PhotoSnap package; macOS 12+ for the Example app
+- Xcode with Swift 6.3 or newer
+- Swift 6.3+
 
 # Installation
 ### Swift Package Manager
@@ -28,6 +28,18 @@ If you prefer not to use any of the aforementioned dependency managers, you can 
 
 # Usage
 See Example
+
+The macOS example in `Example/Example.xcodeproj` uses this checkout as a local Swift package. Open it from the repository so Xcode can resolve the adjacent `Package.swift`.
+
+To verify the package and example locally:
+
+```sh
+swift build
+swift test
+xcodebuild -project Example/Example.xcodeproj -scheme Example -configuration Debug build
+```
+
+Xcode 27 requires macOS 12 as the Example project's deployment target. The PhotoSnap package still declares macOS 11 support. Camera capture still requires a connected camera and permission; package tests use in-memory images instead.
 
 # Image Formats
 The following image formats are supported and are determined by the filename extension: JPEG, TIFF, PNG, GIF, BMP.

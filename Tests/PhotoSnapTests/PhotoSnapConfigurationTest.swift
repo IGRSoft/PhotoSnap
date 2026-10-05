@@ -9,39 +9,37 @@ import XCTest
 @testable import PhotoSnap
 
 final class PhotoSnapConfigurationTest: XCTestCase {
+    // @depends-on: PhotoSnapConfiguration
     func testEnums() {
-        var config = PhotoSnapConfiguration()
-        
-        for type in PhotoSnapConfiguration.ImageType.allCases {
-            config.imageType = type
-            switch type {
-                case .png:
-                    XCTAssertTrue(config.imageType == .png)
-                case .tiff:
-                    XCTAssertTrue(config.imageType == .tiff)
-                case .jpeg:
-                    XCTAssertTrue(config.imageType == .jpeg)
-                case .bmp:
-                    XCTAssertTrue(config.imageType == .bmp)
-                case .gif:
-                    XCTAssertTrue(config.imageType == .gif)
-                }
-        }
-    }
-    
-    func testDefaultValues() {
-        let config = PhotoSnapConfiguration()
-        
-        XCTAssertTrue(config.imageType == .png)
-        XCTAssertFalse(config.isSaveToFile)
-        XCTAssertNotNil(config.dateFormatter)
-        XCTAssertTrue(config.rootDir.absoluteString.count > 0)
-        XCTAssertTrue(config.filePrefix.count > 0)
-        XCTAssertTrue(config.filePathURL.absoluteString.count > 0)
+        XCTAssertEqual(PhotoSnapConfiguration.ImageType.allCases.map(\.rawValue),
+                       ["png", "tiff", "jpeg", "bmp", "gif"])
     }
 
-    static var allTests = [
-        ("testEnums", testEnums),
-        ("testDefaultValues", testDefaultValues),
-    ]
+    // @test-required
+    func testDefaultValues() {
+        let config = PhotoSnapConfiguration()
+
+        XCTAssertEqual(config.imageType, .png)
+        XCTAssertFalse(config.isSaveToFile)
+        XCTAssertEqual(config.filePrefix, "snapshot_")
+        XCTAssertEqual(config.dateFormatter.dateFormat, "yyyy-MM-dd_HH-mm-ss.SSS")
+        XCTAssertEqual(config.rootDir.lastPathComponent, "PhotoSnap")
+    }
+
+    // @depends-on: PhotoSnapConfiguration
+    func testGeneratedPathsForEveryImageType() {
+        var config = PhotoSnapConfiguration()
+        config.rootDir = URL(fileURLWithPath: "/tmp/photosnap-tests", isDirectory: true)
+        config.filePrefix = "test_"
+        config.dateFormatter.dateFormat = "'fixed'"
+
+        for type in PhotoSnapConfiguration.ImageType.allCases {
+            config.imageType = type
+            XCTAssertEqual(config.filePathURL,
+                           config.rootDir.appendingPathComponent("test_fixed.\(type.rawValue)"))
+        }
+    }
 }
+
+// MARK: - Source Info
+// @source-file: Sources/PhotoSnap/PhotoSnapConfiguration.swift

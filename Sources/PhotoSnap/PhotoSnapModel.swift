@@ -12,3 +12,7 @@ public struct PhotoSnapModel {
     public var images = [NSImage]()
     public var paths = [URL]()
 }
+
+// MARK: - Test Info
+// @test-file: Tests/PhotoSnapTests/PhotoSnapModelTest.swift
+// @test-coverage: In-memory images and destination path storage

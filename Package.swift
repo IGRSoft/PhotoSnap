@@ -1,5 +1,4 @@
-// swift-tools-version:5.5
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version:6.3
 
 import PackageDescription
 
@@ -18,5 +17,5 @@ let package = Package(
         ),
         .testTarget(name: "PhotoSnapTests", dependencies: ["PhotoSnap"])
     ],
-    swiftLanguageVersions: [.v5]
+    swiftLanguageModes: [.v6]
 )

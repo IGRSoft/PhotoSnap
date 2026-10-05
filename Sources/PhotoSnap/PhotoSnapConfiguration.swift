@@ -37,3 +37,7 @@ public struct PhotoSnapConfiguration {
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss.SSS"
     }
 }
+
+// MARK: - Test Info
+// @test-file: Tests/PhotoSnapTests/PhotoSnapConfigurationTest.swift
+// @test-coverage: Defaults and generated paths for every image type

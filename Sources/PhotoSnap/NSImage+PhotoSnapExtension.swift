@@ -9,7 +9,7 @@ import AppKit
 
 extension NSImage {
     func data(for type: PhotoSnapConfiguration.ImageType) -> Data? {
-        let tiffData = self.tiffRepresentation
+        guard let tiffData = self.tiffRepresentation else { return nil }
         
         var imageType = NSBitmapImageRep.FileType.png
         var imageProps = [NSBitmapImageRep.PropertyKey : Any]()
@@ -29,7 +29,7 @@ extension NSImage {
             imageType = .gif
         }
         
-        let imageRep = NSBitmapImageRep(data: tiffData!)
+        let imageRep = NSBitmapImageRep(data: tiffData)
         let photoData = imageRep?.representation(using: imageType, properties: imageProps)
         
         return photoData
@@ -54,3 +54,7 @@ extension NSImage {
         return result
     }
 }
+
+// MARK: - Test Info
+// @test-file: Tests/PhotoSnapTests/PhotoSnapTests.swift
+// @test-coverage: Bitmap encoding and file save outcomes for every supported format

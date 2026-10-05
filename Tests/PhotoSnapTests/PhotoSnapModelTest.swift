@@ -6,26 +6,28 @@
 //
 
 import XCTest
+import AppKit
 @testable import PhotoSnap
 
 final class PhotoSnapModelTest: XCTestCase {
+    // @depends-on: PhotoSnapModel
+    @MainActor
     func testModel() {
         var model = PhotoSnapModel()
-        let img = NSImage(named: NSImage.computerName)!
-        let path = "path:///Users"
-        
+        let img = NSImage(size: NSSize(width: 2, height: 2))
+        let path = URL(fileURLWithPath: "/tmp/snapshot.png")
+
         model.images.append(img)
         XCTAssertEqual(model.images.count, 1)
-        XCTAssertTrue(model.images.first != nil)
+        XCTAssertTrue(model.images[0] === img)
         model.images.append(img)
         XCTAssertEqual(model.images.count, 2)
-        
-        model.paths.append(URL(fileURLWithPath: path))
-        XCTAssertEqual(model.paths.count, 1)
-        XCTAssertTrue(model.paths.first != nil)
-    }
 
-    static var allTests = [
-        ("testModel", testModel),
-    ]
+        model.paths.append(path)
+        XCTAssertEqual(model.paths.count, 1)
+        XCTAssertEqual(model.paths[0], path)
+    }
 }
+
+// MARK: - Source Info
+// @source-file: Sources/PhotoSnap/PhotoSnapModel.swift
