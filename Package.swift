@@ -3,19 +3,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "PhotoSnap",
-    platforms: [.macOS(.v11)],
+    name: "CameraSnap",
+    platforms: [.macOS(.v12)],
     products: [
-        .library(name: "PhotoSnap", targets: ["PhotoSnap"])
+        .library(name: "CameraSnap", targets: ["CameraSnap"])
     ],
     targets: [
         .target(
-            name: "PhotoSnap",
+            name: "CameraSnap",
             linkerSettings: [
                 .linkedFramework("AVFoundation", .when(platforms: [.macOS]))
             ]
         ),
-        .testTarget(name: "PhotoSnapTests", dependencies: ["PhotoSnap"])
+        .testTarget(name: "CameraSnapTests", dependencies: ["CameraSnap"])
     ],
     swiftLanguageModes: [.v6]
 )

@@ -7,13 +7,13 @@
 
 import XCTest
 import AppKit
-@testable import PhotoSnap
+@testable import CameraSnap
 
-final class PhotoSnapModelTest: XCTestCase {
-    // @depends-on: PhotoSnapModel
+final class CameraSnapModelTest: XCTestCase {
+    // @depends-on: CameraSnapModel
     @MainActor
     func testModel() {
-        var model = PhotoSnapModel()
+        var model = CameraSnapModel()
         let img = NSImage(size: NSSize(width: 2, height: 2))
         let path = URL(fileURLWithPath: "/tmp/snapshot.png")
 
@@ -30,4 +30,4 @@ final class PhotoSnapModelTest: XCTestCase {
 }
 
 // MARK: - Source Info
-// @source-file: Sources/PhotoSnap/PhotoSnapModel.swift
+// @source-file: Sources/CameraSnap/CameraSnapModel.swift
