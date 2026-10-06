@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-06
+
+### Added
+
+- `CameraSnapConfiguration.OutputSize` conforms to `Codable`, so host apps can persist the selected size. The raw values (`Original`, `1/2`, `1/4`) are the encoded form.
+
 ## [0.3.0] - 2026-10-06
 
 ### Added
@@ -58,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial Swift implementation for capturing still images from a macOS camera.
 
-[Unreleased]: https://github.com/IGRSoft/CameraSnap/compare/0.3.0...HEAD
+[Unreleased]: https://github.com/IGRSoft/CameraSnap/compare/0.3.1...HEAD
+[0.3.1]: https://github.com/IGRSoft/CameraSnap/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/IGRSoft/CameraSnap/compare/0.2.2...0.3.0
 [0.2.2]: https://github.com/IGRSoft/CameraSnap/compare/0.2.1...0.2.2
 [0.2.1]: https://github.com/IGRSoft/CameraSnap/compare/0.2.0...0.2.1
