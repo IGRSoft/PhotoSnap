@@ -8,7 +8,8 @@
 import Foundation
 
 public struct CameraSnapConfiguration {
-    public enum OutputSize: String, CaseIterable, Sendable {
+    /// Persisted by host apps through `Codable`; the raw values are the encoded form, so renaming a case or raw value breaks stored settings.
+    public enum OutputSize: String, CaseIterable, Codable, Sendable {
         case original = "Original"
         case half = "1/2"
         case quarter = "1/4"

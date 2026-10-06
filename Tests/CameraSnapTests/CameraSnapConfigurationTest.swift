@@ -17,6 +17,22 @@ final class CameraSnapConfigurationTest: XCTestCase {
                        ["Original", "1/2", "1/4"])
     }
 
+    // @depends-on: CameraSnapConfiguration
+    func testOutputSizeCodableRoundTrip() throws {
+        let sizes = CameraSnapConfiguration.OutputSize.allCases
+        let data = try JSONEncoder().encode(sizes)
+
+        XCTAssertEqual(String(decoding: data, as: UTF8.self), #"["Original","1\/2","1\/4"]"#)
+        XCTAssertEqual(try JSONDecoder().decode([CameraSnapConfiguration.OutputSize].self, from: data), sizes)
+    }
+
+    // @depends-on: CameraSnapConfiguration
+    func testOutputSizeRejectsUnknownRawValue() {
+        let data = Data(#""full""#.utf8)
+
+        XCTAssertThrowsError(try JSONDecoder().decode(CameraSnapConfiguration.OutputSize.self, from: data))
+    }
+
     // @test-required
     func testDefaultValues() {
         let config = CameraSnapConfiguration()
