@@ -1,6 +1,6 @@
 //
-//  PhotoSnap.swift
-//  PhotoSnap
+//  CameraSnap.swift
+//  CameraSnap
 //
 //  Created by Vitalii Parovishnyk on 26.11.2020.
 //
@@ -40,12 +40,19 @@ private final class LatestFrame: @unchecked Sendable {
 }
 
 @MainActor
-public class PhotoSnap: NSObject {
+public class CameraSnap: NSObject {
+    static func isValidVideoDuration(_ duration: TimeInterval) -> Bool {
+        duration.isFinite && (1.0...5.0).contains(duration)
+    }
     
-    public var photoSnapConfiguration = PhotoSnapConfiguration()
+    public var cameraSnapConfiguration = CameraSnapConfiguration()
     
-    private let videoCaptureQueue = DispatchQueue(label: "com.igrsoft.VideoCaptureQueue")
+    private nonisolated let recordingBridge = VideoRecordingBridge(
+        queue: DispatchQueue(label: "com.igrsoft.VideoCaptureQueue"))
     private let latestFrame = LatestFrame()
+    private var videoRequestID: UUID?
+    private var videoCompletion: ((Result<CameraSnapVideoModel, CameraSnapVideoError>) -> Void)?
+    var recordingSource: VideoRecordingSource?
     
     private let captureSession = AVCaptureSession()
     
@@ -90,9 +97,13 @@ public class PhotoSnap: NSObject {
     public func fetchSnapshot(from captureDevice: AVCaptureDevice? = nil,
                               withWarmup warmup: Int = 1,
                               withTimelapse timelapse: Double = 0.0,
-                              resultBlock: @escaping (PhotoSnapModel) -> Void) {
+                              resultBlock: @escaping (CameraSnapModel) -> Void) {
         
-        var model = PhotoSnapModel()
+        var model = CameraSnapModel()
+        if videoRequestID != nil {
+            resultBlock(model)
+            return
+        }
         
         let cameraDevice = captureDevice ?? self.defaultDevice
         
@@ -115,14 +126,14 @@ public class PhotoSnap: NSObject {
             if timelapse > 0.0 {
                 Logger.debug("Time lapse: snapping every \(timelapse) seconds to current directory.")
                 
-                if photoSnapConfiguration.isSaveToFile {
+                if cameraSnapConfiguration.isSaveToFile {
                     var isDir: ObjCBool = false
                     let fm = FileManager.default
-                    if fm.fileExists(atPath: photoSnapConfiguration.rootDir.path, isDirectory: &isDir), isDir.boolValue == false {
+                    if fm.fileExists(atPath: cameraSnapConfiguration.rootDir.path, isDirectory: &isDir), isDir.boolValue == false {
                         do {
-                            try fm.createDirectory(at: photoSnapConfiguration.rootDir, withIntermediateDirectories: false, attributes: nil)
+                            try fm.createDirectory(at: cameraSnapConfiguration.rootDir, withIntermediateDirectories: false, attributes: nil)
                         } catch {
-                            Logger.debug("Can't create a folder: \(photoSnapConfiguration.rootDir)")
+                            Logger.debug("Can't create a folder: \(cameraSnapConfiguration.rootDir)")
                         }
                     }
                 }
@@ -134,13 +145,14 @@ public class PhotoSnap: NSObject {
                     Logger.debug(" - Snapshot \(seq)")
                     Logger.debug(" (\(now))")
                     
-                    let filePath = photoSnapConfiguration.filePathURL
+                    let filePath = cameraSnapConfiguration.filePathURL
                     let updatedFilePath = URL(fileURLWithPath: filePath.deletingPathExtension().absoluteString + "_\(seq)").appendingPathExtension(filePath.pathExtension)
                     
                     // capture and write
-                    if let image = self.readCurrentFrame() {
-                        if photoSnapConfiguration.isSaveToFile {
-                            image.save(to: updatedFilePath, for: photoSnapConfiguration.imageType)
+                    if let capturedImage = self.readCurrentFrame() {
+                        let image = capturedImage.resized(for: cameraSnapConfiguration.imageSize)
+                        if cameraSnapConfiguration.isSaveToFile {
+                            image.save(to: updatedFilePath, for: cameraSnapConfiguration.imageType)
                             model.paths.append(updatedFilePath)
                         }
                         model.images.append(image)
@@ -152,10 +164,11 @@ public class PhotoSnap: NSObject {
                     seq += 1
                 }
             }
-            else if let image = self.readCurrentFrame() {
-                let filePath = photoSnapConfiguration.filePathURL
-                if photoSnapConfiguration.isSaveToFile {
-                    image.save(to: filePath, for: photoSnapConfiguration.imageType)
+            else if let capturedImage = self.readCurrentFrame() {
+                let image = capturedImage.resized(for: cameraSnapConfiguration.imageSize)
+                let filePath = cameraSnapConfiguration.filePathURL
+                if cameraSnapConfiguration.isSaveToFile {
+                    image.save(to: filePath, for: cameraSnapConfiguration.imageType)
                     model.paths.append(filePath)
                 }
                 model.images.append(image)
@@ -165,6 +178,108 @@ public class PhotoSnap: NSObject {
         }
         
         resultBlock(model)
+    }
+
+    /// Records a silent H.264 MOV over an inclusive 1–5 second media interval.
+    /// Completion runs once on the main actor after finalization or cleanup.
+    /// - Parameters:
+    ///   - duration: A finite recording interval from 1 through 5 seconds.
+    ///   - captureDevice: The camera to use, or the default camera when `nil`.
+    ///   - destinationURL: The exact unused `.mov` URL, or a generated configured URL when `nil`.
+    ///   - warmup: Whole seconds to wait before accepting video samples.
+    ///   - resultBlock: The finalized recording or a typed recording failure.
+    public func recordVideo(for duration: TimeInterval,
+                            from captureDevice: AVCaptureDevice? = nil,
+                            to destinationURL: URL? = nil,
+                            withWarmup warmup: Int = 1,
+                            resultBlock: @escaping (Result<CameraSnapVideoModel, CameraSnapVideoError>) -> Void) {
+        guard Self.isValidVideoDuration(duration) else {
+            resultBlock(.failure(.invalidDuration))
+            return
+        }
+        guard videoRequestID == nil else {
+            resultBlock(.failure(.recordingInProgress))
+            return
+        }
+        let device = recordingSource == nil ? (captureDevice ?? defaultDevice) : nil
+        guard recordingSource != nil || device != nil else {
+            resultBlock(.failure(.deviceUnavailable))
+            return
+        }
+        let destination = destinationURL ?? cameraSnapConfiguration.videoFilePathURL
+        let parent = destination.deletingLastPathComponent()
+        guard destination.isFileURL, destination.pathExtension.lowercased() == "mov" else {
+            resultBlock(.failure(.destinationUnavailable))
+            return
+        }
+        do {
+            if destinationURL == nil {
+                try FileManager.default.createDirectory(at: parent, withIntermediateDirectories: true)
+            }
+            var isDirectory: ObjCBool = false
+            guard !FileManager.default.fileExists(atPath: destination.path),
+                  FileManager.default.fileExists(atPath: parent.path, isDirectory: &isDirectory),
+                  isDirectory.boolValue else {
+                resultBlock(.failure(.destinationUnavailable))
+                return
+            }
+        } catch {
+            resultBlock(.failure(.destinationUnavailable))
+            return
+        }
+
+        let id = UUID()
+        videoRequestID = id
+        videoCompletion = resultBlock
+        let engine = VideoRecordingEngine(queue: recordingBridge.queue,
+                                          duration: duration,
+                                          destination: destination,
+                                          outputSize: cameraSnapConfiguration.videoSize) { [self] result in
+            Task { @MainActor [self] in
+                guard self.videoRequestID == id else { return }
+                if let recordingSource = self.recordingSource {
+                    recordingSource.stop()
+                } else {
+                    self.stopSession()
+                }
+                self.recordingBridge.clear()
+                self.videoRequestID = nil
+                let completion = self.videoCompletion
+                self.videoCompletion = nil
+                completion?(result)
+            }
+        }
+        recordingBridge.install(engine)
+        let started: Bool
+        if let recordingSource {
+            started = recordingSource.start(using: recordingBridge)
+        } else if let device {
+            started = startSession(device)
+        } else {
+            started = false
+        }
+        guard started else {
+            recordingSource?.stop()
+            recordingBridge.clear()
+            videoRequestID = nil
+            videoCompletion = nil
+            resultBlock(.failure(.sessionSetupFailed))
+            return
+        }
+        Task { @MainActor [weak self] in
+            if warmup > 0 {
+                let safeWarmup = min(warmup, Int(UInt64.max / 1_000_000_000))
+                try? await Task.sleep(nanoseconds: UInt64(safeWarmup) * 1_000_000_000)
+            }
+            guard let self, self.videoRequestID == id else { return }
+            self.recordingBridge.startAccepting()
+            self.recordingSource?.beginSamples(using: self.recordingBridge)
+            Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds: UInt64((duration * 3 + 2) * 1_000_000_000))
+                guard let self, self.videoRequestID == id else { return }
+                self.recordingBridge.timeout()
+            }
+        }
     }
     
     private func stopSession() {
@@ -227,7 +342,7 @@ public class PhotoSnap: NSObject {
         ]
         
         // Add sample buffer serial queue
-        output?.setSampleBufferDelegate(self, queue: videoCaptureQueue)
+        output?.setSampleBufferDelegate(self, queue: recordingBridge.queue)
         Logger.debug("Done.");
         guard let output, captureSession.canAddOutput(output) else {
             Logger.debug("Can't add capture output")
@@ -249,15 +364,17 @@ public class PhotoSnap: NSObject {
     }
 }
 
-extension PhotoSnap: AVCaptureVideoDataOutputSampleBufferDelegate {
+extension CameraSnap: AVCaptureVideoDataOutputSampleBufferDelegate {
     nonisolated public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // Swap out old frame for new one
         let videoFrame = CMSampleBufferGetImageBuffer(sampleBuffer)
         
         latestFrame.store(videoFrame)
+        recordingBridge.accept(sampleBuffer)
     }
 }
 
 // MARK: - Test Info
-// @test-file: Tests/PhotoSnapTests/PhotoSnapTests.swift
+// @test-file: Tests/CameraSnapTests/CameraSnapTests.swift
+// @related-tests: Tests/CameraSnapTests/CameraSnapVideoValidationTests.swift
 // @test-coverage: Capture object configuration without camera hardware
